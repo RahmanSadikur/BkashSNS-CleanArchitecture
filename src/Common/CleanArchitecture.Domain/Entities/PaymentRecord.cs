@@ -2,7 +2,7 @@
 
 namespace BkashSNS.Domain.Entities
 {
-    public class Message
+    public class PaymentRecord
     {
         public string Id { get; set; }
         public string MerchantWallet { get; set; }
@@ -10,7 +10,7 @@ namespace BkashSNS.Domain.Entities
         public string TerminalId { get; set; }
         public string TransactionId { get; set; }
         public decimal Amount { get; set; }
-        public string Timestamp { get; set; }
-        public DateTime Timestamp2 { get; set; }
+        public string TimestampString { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace BkashSNS.Domain.Entities
         public string MessageId { get; set; }
         public string Token { get; set; }
         public string TopicArn { get; set; }
-        public object Message { get; set; }
+        public object PaymentRecord { get; set; }
         //public Message Message2 { get; set; }
         public string SubscribeURL { get; set; }
         public string Timestamp { get; set; }

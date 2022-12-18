@@ -25,7 +25,7 @@ namespace BkashSNS.Infrastructure.Services
 
         }
 
-        public async Task Insert(Message message)
+        public async Task Insert(PaymentRecord message)
         {
             
 
@@ -34,25 +34,25 @@ namespace BkashSNS.Infrastructure.Services
             message.Id = Guid.NewGuid().ToString();
 
 
-            var response = _dynamoDbContext.SaveAsync<Message>(message);
+            var response = _dynamoDbContext.SaveAsync<PaymentRecord>(message);
 
 
 
         }
 
-        public async Task<Message> GetLastPaymentInfo(string merchantWallet, string counterNo)
+        public async Task<PaymentRecord> GetLastPaymentInfo(string merchantWallet, string counterNo)
         {
 
 
-           var response= _dynamoDbContext.ScanAsync<Message>(new[] { new ScanCondition("MerchantWallet", ScanOperator.Equal, merchantWallet ),
+           var response= _dynamoDbContext.ScanAsync<PaymentRecord>(new[] { new ScanCondition("MerchantWallet", ScanOperator.Equal, merchantWallet ),
                new ScanCondition("TerminalId", ScanOperator.Equal, counterNo) }).GetRemainingAsync();
 
 
-            List<Message> data = new List<Message>();
+            List<PaymentRecord> data = new List<PaymentRecord>();
 
             while (response.IsCompletedSuccessfully)
             {
-                foreach (Message d in response.Result)
+                foreach (PaymentRecord d in response.Result)
                 {
                     return d;
                    
@@ -65,7 +65,7 @@ namespace BkashSNS.Infrastructure.Services
         }
 
 
-        public async Task<List<Message>> GetPaymentInfoByDate(string merchantWallet, string fromDate, string toDate, string top)
+        public async Task<List<PaymentRecord>> GetPaymentInfoByDate(string merchantWallet, string fromDate, string toDate, string top)
         {
 
 
@@ -73,15 +73,15 @@ namespace BkashSNS.Infrastructure.Services
             var toDate1 = DateTime.Parse(toDate).AddDays(1).ToString("yyyy-MM-dd");
 
             var response =  _dynamoDbContext
-                    .QueryAsync<Message>(merchantWallet, QueryOperator.Between, new Object[] { fromDate1, toDate1 })
+                    .QueryAsync<PaymentRecord>(merchantWallet, QueryOperator.Between, new Object[] { fromDate1, toDate1 })
                     .GetRemainingAsync();
 
-             List <Message> data = new List<Message>();
+             List <PaymentRecord> data = new List<PaymentRecord>();
 
             while (response.IsCompletedSuccessfully)
             {
 
-                foreach (Message d in response.Result)
+                foreach (PaymentRecord d in response.Result)
                 {
 
                     data.Add(d);

@@ -77,9 +77,9 @@ namespace BkashSNS.Api.Controllers
                                 }
                                 else
                                 {
-                                    Message message = JsonConvert.DeserializeObject<Message>(msg.Message.ToString());
+                                    PaymentRecord message = JsonConvert.DeserializeObject<PaymentRecord>(msg.PaymentRecord.ToString());
                                     _logger.LogInformation("Signature verification failed");
-                                    await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.Message), Response = body, Error = "Signature verification failed", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
+                                    await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.PaymentRecord), Response = body, Error = "Signature verification failed", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
                                     return BadRequest("Signature verification failed");
                                 }
                             }
@@ -88,20 +88,20 @@ namespace BkashSNS.Api.Controllers
                                 _logger.LogInformation("Subject : " + msg.Subject);
 
 
-                                Message message = JsonConvert.DeserializeObject<Message>(msg.Message.ToString()); //todo
+                                PaymentRecord message = JsonConvert.DeserializeObject<PaymentRecord>(msg.PaymentRecord.ToString()); //todo
 
-                                _logger.LogInformation("Message : " + msg.Message.ToString());
-                                //_logger.LogInformation("Message : " + JsonConvert.SerializeObject(message) );
+                                _logger.LogInformation("PaymentRecord : " + msg.PaymentRecord.ToString());
+                                //_logger.LogInformation("PaymentRecord : " + JsonConvert.SerializeObject(message) );
 
-                                if (message.Timestamp.Contains("+"))
+                                if (message.TimestampString.Contains("+"))
                                 {
-                                    string temp = message.Timestamp.Split("+")[0];
-                                    message.Timestamp2 = //DateTime.ParseExact(msg.Message.timestamp, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                    string temp = message.TimestampString.Split("+")[0];
+                                    message.Timestamp = //DateTime.ParseExact(msg.PaymentRecord.timestamp, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                                     DateTime.Parse(temp.Substring(0, temp.Length - 5));
                                 }
                                 else // bkash last response 20210809174716   yyyy mm dd
                                 {
-                                    message.Timestamp2 = DateTime.ParseExact(message.Timestamp, "yyyyMMddHHmmss", CultureInfo.InvariantCulture);
+                                    message.Timestamp = DateTime.ParseExact(message.TimestampString, "yyyyMMddHHmmss", CultureInfo.InvariantCulture);
                                 }
 
                                 await _clientService.Insert(message);
@@ -114,7 +114,7 @@ namespace BkashSNS.Api.Controllers
                                 //    _logger.LogInformation("ClientManager().Insert : false ");
                                 //}
 
-                                await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.Message), Response = body, Error = "Ok", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
+                                await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.PaymentRecord), Response = body, Error = "Ok", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
 
                                 //todo log save
 
@@ -123,7 +123,7 @@ namespace BkashSNS.Api.Controllers
                             {
 
 
-                                await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.Message), Response = body, Error = msg.Message.ToString(), Timestamp = DateTime.Now });
+                                await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.PaymentRecord), Response = body, Error = msg.PaymentRecord.ToString(), Timestamp = DateTime.Now });
                                 System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
                                 var response = await client.GetAsync(msg.SubscribeURL);
@@ -131,8 +131,8 @@ namespace BkashSNS.Api.Controllers
                             }
                             else if (messagetype.Equals("UnsubscribeConfirmation"))
                             {
-                                Message message = JsonConvert.DeserializeObject<Message>(msg.Message.ToString());
-                                await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.Message), Response = body, Error = "UnsubscribeConfirmation", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
+                                PaymentRecord message = JsonConvert.DeserializeObject<PaymentRecord>(msg.PaymentRecord.ToString());
+                                await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.PaymentRecord), Response = body, Error = "UnsubscribeConfirmation", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
 
                                 System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
@@ -142,9 +142,9 @@ namespace BkashSNS.Api.Controllers
                         }
                         else
                         {
-                            Message message = JsonConvert.DeserializeObject<Message>(msg.Message.ToString());
+                            PaymentRecord message = JsonConvert.DeserializeObject<PaymentRecord>(msg.PaymentRecord.ToString());
                             _logger.LogInformation("Unexpected signature version. Unable to verify signature.");
-                            await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.Message), Response = body, Error = "Unexpected signature version. Unable to verify signature.", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
+                            await _logService.Insert(new ClientLog { Message = JsonConvert.SerializeObject(msg.PaymentRecord), Response = body, Error = "Unexpected signature version. Unable to verify signature.", Timestamp = DateTime.Now, MerchantWallet = message.MerchantWallet });
                             return BadRequest("Unexpected signature version. Unable to verify signature.");
 
 
@@ -155,19 +155,19 @@ namespace BkashSNS.Api.Controllers
                     {
                         //if (messagetype.Equals("Notification"))
                         //{
-                        //    Message message = JsonConvert.DeserializeObject<Message>(body);
+                        //    PaymentRecord message = JsonConvert.DeserializeObject<PaymentRecord>(body);
 
 
 
-                        //    // Message message = JsonConvert.DeserializeObject<Message>(msg.Message);
+                        //    // PaymentRecord message = JsonConvert.DeserializeObject<PaymentRecord>(msg.PaymentRecord);
 
                         //    string temp = message.timestamp.Split("+")[0];
-                        //    message.timestamp2 = //DateTime.ParseExact(msg.Message.timestamp, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                        //    message.timestamp2 = //DateTime.ParseExact(msg.PaymentRecord.timestamp, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                         //    DateTime.Parse(temp.Substring(0, temp.Length - 5));
 
                         //    await new ClientManager().Insert(message);
 
-                        //    await new LogManager().Insert(new Client_Log { Message = JsonConvert.SerializeObject(message), Response = body, Error = "Ok", timestamp = DateTime.Now }, msg.Message.merchantWallet);
+                        //    await new LogManager().Insert(new Client_Log { PaymentRecord = JsonConvert.SerializeObject(message), Response = body, Error = "Ok", timestamp = DateTime.Now }, msg.PaymentRecord.merchantWallet);
 
                         //    //todo log save
 
