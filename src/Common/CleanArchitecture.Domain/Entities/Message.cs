@@ -4,13 +4,13 @@ namespace BkashSNS.Domain.Entities
 {
     public class Message
     {
-        public string id { get; set; }
-        public string merchantWallet { get; set; }
-        public string customerWallet { get; set; }
-        public string terminalId { get; set; }
-        public string transactionId { get; set; }
-        public decimal amount { get; set; }
-        public string timestamp { get; set; }
-        public DateTime timestamp2 { get; set; }
+        public string Id { get; set; }
+        public string MerchantWallet { get; set; }
+        public string CustomerWallet { get; set; }
+        public string TerminalId { get; set; }
+        public string TransactionId { get; set; }
+        public decimal Amount { get; set; }
+        public string Timestamp { get; set; }
+        public DateTime Timestamp2 { get; set; }
     }
 }

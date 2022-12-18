@@ -68,7 +68,7 @@ namespace BkashSNS.Api.Controllers
 
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create([FromBody] Client_Mapping model)
+        public async Task<IActionResult> Create([FromBody] ClientMapping model)
         {
             try
             {
@@ -76,8 +76,8 @@ namespace BkashSNS.Api.Controllers
                 {
                     return Unauthorized();
                 }
-                model.id = Guid.NewGuid().ToString();
-                model.create_date = DateTime.Now;
+                model.Id = Guid.NewGuid().ToString();
+                model.CreateDate = DateTime.Now.Date;
                 var data = await _clientMappingService.Create(model);
                 return Ok(data);
             }
@@ -90,7 +90,7 @@ namespace BkashSNS.Api.Controllers
 
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Update([FromBody] Client_Mapping model)
+        public async Task<IActionResult> Update([FromBody] ClientMapping model)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace BkashSNS.Api.Controllers
 
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Remove([FromBody] Client_Mapping model)
+        public async Task<IActionResult> Remove([FromBody] ClientMapping model)
         {
             try
             {

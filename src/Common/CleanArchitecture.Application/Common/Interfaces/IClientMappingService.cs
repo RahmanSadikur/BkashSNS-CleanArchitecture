@@ -6,10 +6,10 @@ namespace BkashSNS.Application.Common.Interfaces
 {
     public interface IClientMappingService
     {
-        Task<Client_Mapping> FindByMerchantWallet(string merchantWallet);
-        Task<bool> Create(Client_Mapping model);
-        Task<bool> Update(Client_Mapping model);
-        Task Delete(Client_Mapping model);
-        Task<List<Client_Mapping>> GetAll(string searchText);
+        Task<ClientMapping> FindByMerchantWallet(string merchantWallet);
+        Task<bool> Create(ClientMapping model);
+        Task<bool> Update(ClientMapping model);
+        Task Delete(ClientMapping model);
+        Task<List<ClientMapping>> GetAll(string searchText);
     }
 }

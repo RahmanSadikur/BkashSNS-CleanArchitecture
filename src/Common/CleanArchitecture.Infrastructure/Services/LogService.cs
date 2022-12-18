@@ -23,13 +23,13 @@ namespace BkashSNS.Infrastructure.Services
         }
 
 
-        public async Task<bool> Insert(Client_Log log)
+        public async Task<bool> Insert(ClientLog log)
         {
          
 
-            log.id = Guid.NewGuid().ToString();
+            log.Id = Guid.NewGuid().ToString();
 
-           var response =  _dynamoDbContext.SaveAsync<Client_Log>(log);
+           var response =  _dynamoDbContext.SaveAsync<ClientLog>(log);
 
             return true;
 
@@ -37,22 +37,22 @@ namespace BkashSNS.Infrastructure.Services
 
 
 
-        public async Task<List<Client_Log>> GetLogByDate(string merchantWallet, string fromDate, string toDate, string top)
+        public async Task<List<ClientLog>> GetLogByDate(string merchantWallet, string fromDate, string toDate, string top)
         {
 
 
           var  fromDate1 = DateTime.Parse(fromDate).Date.AddDays(-1);
           var  toDate1 = DateTime.Parse(toDate).Date.AddDays(1);
-          Task<List<Client_Log>> 
-          response = !string.IsNullOrEmpty(merchantWallet) ? _dynamoDbContext.QueryAsync<Client_Log>(merchantWallet, QueryOperator.Between, new Object[] { fromDate1, toDate1 }).GetRemainingAsync() 
-              : _dynamoDbContext.ScanAsync<Client_Log>(new[] { new ScanCondition("timestamp", ScanOperator.Between, fromDate1, toDate1) }).GetRemainingAsync();
+          Task<List<ClientLog>> 
+          response = !string.IsNullOrEmpty(merchantWallet) ? _dynamoDbContext.QueryAsync<ClientLog>(merchantWallet, QueryOperator.Between, new Object[] { fromDate1, toDate1 }).GetRemainingAsync() 
+              : _dynamoDbContext.ScanAsync<ClientLog>(new[] { new ScanCondition("Timestamp", ScanOperator.Between, fromDate1, toDate1) }).GetRemainingAsync();
 
-            List<Client_Log> data = new List<Client_Log>();
+            List<ClientLog> data = new List<ClientLog>();
 
             while (response.IsCompletedSuccessfully)
             {
 
-                foreach (Client_Log d in response.Result)
+                foreach (ClientLog d in response.Result)
                 {
 
                     data.Add(d);

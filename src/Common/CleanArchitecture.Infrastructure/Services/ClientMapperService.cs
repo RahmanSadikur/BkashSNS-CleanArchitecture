@@ -27,10 +27,10 @@ namespace BkashSNS.Infrastructure.Services
 
         }
 
-        public async Task<Client_Mapping> FindByMerchantWallet(string merchantWallet)
+        public async Task<ClientMapping> FindByMerchantWallet(string merchantWallet)
         {
             
-            var item = await _dynamoDbContext.LoadAsync<Client_Mapping>(merchantWallet);
+            var item = await _dynamoDbContext.LoadAsync<ClientMapping>(merchantWallet);
 
             while (item!=null)
             {
@@ -42,16 +42,16 @@ namespace BkashSNS.Infrastructure.Services
         }
 
 
-        public async Task<bool> Create(Client_Mapping model)
+        public async Task<bool> Create(ClientMapping model)
         {
            
 
-            var dataPrv = await FindByMerchantWallet(model.merchantWallet);
+            var dataPrv = await FindByMerchantWallet(model.MerchantWallet);
             if (dataPrv != null)
             {
-                throw new Exception($"Item in database with mobile : {model.merchantWallet} already exists\n");
+                throw new Exception($"Item in database with mobile : {model.MerchantWallet} already exists\n");
             }
-            var modelResponse = _dynamoDbContext.SaveAsync<Client_Mapping>(model);
+            var modelResponse = _dynamoDbContext.SaveAsync<ClientMapping>(model);
 
             // Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
             return true;
@@ -59,24 +59,24 @@ namespace BkashSNS.Infrastructure.Services
         }
 
 
-        public async Task<bool> Update(Client_Mapping model)
+        public async Task<bool> Update(ClientMapping model)
         {
 
 
             try
             {
-                var dataPrv = await FindByMerchantWallet(model.merchantWallet);
+                var dataPrv = await FindByMerchantWallet(model.MerchantWallet);
                 if (dataPrv != null)
                 {
-                    if (dataPrv.id != model.id)
+                    if (dataPrv.Id != model.Id)
                     {
-                        throw new Exception($"Item in database with mobile : {model.merchantWallet} already exists\n");
+                        throw new Exception($"Item in database with mobile : {model.MerchantWallet} already exists\n");
                     }
                 }
 
 
                 // replace the item with the updated content
-                var modelResponse = _dynamoDbContext.SaveAsync<Client_Mapping>(model);
+                var modelResponse = _dynamoDbContext.SaveAsync<ClientMapping>(model);
                 return true;
             }
             catch (Exception ex)
@@ -86,45 +86,45 @@ namespace BkashSNS.Infrastructure.Services
 
         }
 
-        public async Task Delete(Client_Mapping model)
+        public async Task Delete(ClientMapping model)
         {
-            var dataPrv = await FindByMerchantWallet(model.merchantWallet);
+            var dataPrv = await FindByMerchantWallet(model.MerchantWallet);
             if (dataPrv == null)
             {
                
-                    throw new Exception($"Item in database with mobile : {model.merchantWallet} doesn't exists\n");
+                    throw new Exception($"Item in database with mobile : {model.MerchantWallet} doesn't exists\n");
                 
             }
-            var modelResponse = _dynamoDbContext.DeleteAsync<Client_Mapping>(model);
+            var modelResponse = _dynamoDbContext.DeleteAsync<ClientMapping>(model);
 
         }
 
 
-        public async Task<List<Client_Mapping>> GetAll(string searchText)
+        public async Task<List<ClientMapping>> GetAll(string searchText)
         {
-            Task<List<Client_Mapping>> response ;
+            Task<List<ClientMapping>> response ;
 
             if (!string.IsNullOrEmpty(searchText))
               {
                   response =
-                      _dynamoDbContext.ScanAsync<Client_Mapping>(new[]
-                              { new ScanCondition("client_name_group", ScanOperator.Equal, searchText) })
+                      _dynamoDbContext.ScanAsync<ClientMapping>(new[]
+                              { new ScanCondition("ClientNameGroup", ScanOperator.Equal, searchText) })
                           .GetRemainingAsync();
               }
               else
             {
                 response =
-                    _dynamoDbContext.ScanAsync<Client_Mapping>(default).GetRemainingAsync();
+                    _dynamoDbContext.ScanAsync<ClientMapping>(default).GetRemainingAsync();
             }
 
           
 
-            List<Client_Mapping> data = new List<Client_Mapping>();
+            List<ClientMapping> data = new List<ClientMapping>();
 
             while (response.IsCompletedSuccessfully)
             {
 
-                foreach (Client_Mapping d in response.Result)
+                foreach (ClientMapping d in response.Result)
                 {
                     data.Add(d);
                 }

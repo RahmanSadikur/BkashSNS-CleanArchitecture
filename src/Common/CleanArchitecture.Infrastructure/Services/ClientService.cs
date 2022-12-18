@@ -31,7 +31,7 @@ namespace BkashSNS.Infrastructure.Services
 
             
 
-            message.id = Guid.NewGuid().ToString();
+            message.Id = Guid.NewGuid().ToString();
 
 
             var response = _dynamoDbContext.SaveAsync<Message>(message);
@@ -44,8 +44,8 @@ namespace BkashSNS.Infrastructure.Services
         {
 
 
-           var response= _dynamoDbContext.ScanAsync<Message>(new[] { new ScanCondition("merchantWallet", ScanOperator.Equal, merchantWallet ),
-               new ScanCondition("counterNo", ScanOperator.Equal, counterNo) }).GetRemainingAsync();
+           var response= _dynamoDbContext.ScanAsync<Message>(new[] { new ScanCondition("MerchantWallet", ScanOperator.Equal, merchantWallet ),
+               new ScanCondition("TerminalId", ScanOperator.Equal, counterNo) }).GetRemainingAsync();
 
 
             List<Message> data = new List<Message>();
